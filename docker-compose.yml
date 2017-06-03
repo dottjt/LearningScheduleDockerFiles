@@ -8,6 +8,7 @@ services:
         volumes:
             - ./Nginx/docker-nginx-data:/usr/share/nginx/html
             - ./Nginx/config:/etc/nginx
+            - ./app-data:/app 
         networks:
             - server
         depends_on:
@@ -21,6 +22,7 @@ services:
             - 3001
         volumes:
             - ./LearningSchedule/docker-upload-backups:/app/server/uploads
+            - app-data:/app
         networks:
             - database
             - server
@@ -88,8 +90,8 @@ services:
         networks:
             - database
 
-# volumes:
-#   data:
+volumes:
+    app-data:
 
 networks:
     database:
