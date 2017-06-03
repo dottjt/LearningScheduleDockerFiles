@@ -1,0 +1,96 @@
+version: '3.2'
+
+services:
+    nginx:
+        build: ./Nginx/
+        ports:
+            - 80:80
+        volumes:
+            - ./Nginx/docker-nginx-data:/usr/share/nginx/html
+            - ./Nginx/config:/etc/nginx
+        networks:
+            - server
+        depends_on:
+            - node1
+            - node2
+            - node3
+
+    node1:
+        build: ./LearningSchedule/
+        ports: 
+            - 3001
+        volumes:
+            - ./LearningSchedule/docker-upload-backups:/app/server/uploads
+        networks:
+            - database
+            - server
+        depends_on:
+            - postgres
+            - redis
+        environment:
+            SECRET_KEY: “${SECRET_KEY}”
+            SCHEDULE_DATABASE_URL: “${SCHEDULE_DATABASE_URL}”
+            USER_DATABASE_URL: “${USER_DATABASE_URL}”
+
+    node2:
+        build: ./LearningSchedule/
+        ports: 
+            - 3001
+        volumes:
+            - ./LearningSchedule/docker-upload-backups:/app/server/uploads
+        networks:
+            - database
+            - server
+        depends_on:
+            - postgres
+            - redis
+        environment:
+            SECRET_KEY: “${SECRET_KEY}”
+            SCHEDULE_DATABASE_URL: “${SCHEDULE_DATABASE_URL}”
+            USER_DATABASE_URL: “${USER_DATABASE_URL}”
+
+    node3:
+        build: ./LearningSchedule/
+        ports: 
+            - 3001
+        volumes:
+            - ./LearningSchedule/docker-upload-backups:/app/server/uploads
+        networks:
+            - database
+            - server
+        depends_on:
+            - postgres
+            - redis
+        environment:
+            SECRET_KEY: “${SECRET_KEY}”
+            SCHEDULE_DATABASE_URL: “${SCHEDULE_DATABASE_URL}”
+            USER_DATABASE_URL: “${USER_DATABASE_URL}”
+
+
+    postgres:
+        image: postgres:9.6.3-alpine
+        volumes:
+            - ./Postgres/docker-postgres-data:/var/lib/postgresql/data
+        ports:
+             - 5432
+        networks:
+            - database
+        environment:
+            POSTGRES_USER: "${POSTGRES_USER}"
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+
+    redis:
+        image: redis:3.2.9-alpine
+        ports:  
+            - 6379
+        volumes:
+            - ./Redis/docker-redis-data:/data
+        networks:
+            - database
+
+# volumes:
+#   data:
+
+networks:
+    database:
+    server:
